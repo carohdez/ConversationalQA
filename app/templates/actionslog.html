@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Actions</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    {% if actions|length < 1 %}
+    We cannot show actions.
+    {% else %}
+        {% for action in actions %}
+            <br>{{action.action_type}};{{action.page}};{{action.feature}};{{action.description}};{{action.date}};{{action.userID}};{{action.condition}};{{action.workerID}};{{action.hotelID}};{{action.reviewID}}
+        {% endfor %}
+
+    {% endif %}
+    <form action="/" method = "POST">
+<!--        <input type="text" name="content" id="content">-->
+<!--        <input type="submit" value="Add task">-->
+    </form>
+
+<div>
+{% endblock %}

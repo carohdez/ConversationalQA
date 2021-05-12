@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Hotel recommendations</title>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='/css/style.css') }}">
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+
+{% endblock %}
+
+{% block body %}
+    {% if hotels|length < 1 %}
+    No tasks. Create one.
+    {% else %}
+    <div style="width: 1250px;">
+       <div style="float:left; width: 53%">
+            {% for hotel in hotels %}
+                {% set aux_id = hotel.hotelID|string %}
+                {% set aux_id=aux_id[-1] %}
+                <div class="container2">
+                  <div class="hotelbox">
+                    <div class="top-bar">
+                      <div class="avatar"><p>H</p></div>
+                      <div class="name">Hotel {{ hotel.name}}</div>
+                      <div class="price">${{hotel.price}}</div>
+                      <div class="stars"><img src="./static/img/rating/{{ hotel.stars_file}}" width="95" height="20"></div>
+
+                    </div>
+                    <div class="middle">
+                        <div class="voldemort">
+                            <div class="form-group grau-border">
+                                <img src="./static/img/hotels/room{{aux_id}}.jpg" width="145" height="85">
+                                <div class="buttongrad">
+                                    <div class="labelbuttons"><a href="hotel_general/{{hotel.hotelID}}" target="_blank">Info Hotel</a></div>
+                                </div>
+                                <div class="buttonbook">
+                                    <div class="labelbuttons"><a href="../?hotelID={{hotel.hotelID}}&book=yes">Book Hotel</a></div>
+                                </div>
+                                <div class="explanationshort"><p>{{ hotel.explanation}}<br>({{ hotel.num_reviews}} reviews)</br></div>
+
+                           </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+           <br>
+            {% endfor %}
+        {% endif %}
+       </div>
+       <div style="overflow: hidden;">
+           <div class="container">
+                <div class="chatbox">
+                    <div class="top-bar">
+                      <div class="avatar"><p>E</p></div>
+                      <div class="name">Recommendations explainer</div>
+                      <div class="menu">
+                        <div class="dots"></div>
+                      </div>
+                    </div>
+                    <form action="/" method = "POST">
+                            <div class="bottom-bar">
+                                {% if (reply == "") %}
+                                    {{ form.question(size=300) }}
+                                {% endif %}
+                                <!--<input type="text" id="question" name="question" value = {{ question }} placeholder="Enter your question here ..." /> -->
+                            </div>
+                            <div class="middle">
+                                {{ form.count_qs }}
+                                {{ form.intention_last }}
+                                {{ form.question_last }}
+                                {{ form.reply_last }}
+                                {% if (reply != "") %}
+                                    <br>
+                                    <div class="replyfont">
+                                        Your question # {{ count_qs }}: "{{ user_q }}"
+                                        <br>
+                                        <br>
+                                        Reply: "{{ reply }}"
+                                    </div>
+                                    <div class="replyratefont">
+                                        {{ form.perception.label }}
+                                        <br>
+                                        {{ form.perception }}
+                                        <br>
+                                    </div>
+                                {% endif %}
+                                <div class="rate">
+                                   {{ form.submit() }}
+                                </div>
+                            </div>
+
+                    </form>
+                </div>
+            </div>
+       </div>
+    </div>
+    <div style="clear:both"></div>
+
+{% endblock %}
+
+

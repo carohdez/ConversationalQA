@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>Hotel details</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='/css/style.css') }}">
+{% endblock %}
+
+{% block body %}
+    {% if hotel_revs|length < 1 %}
+    No data for this hotel.
+    <img src="././static/img/back.png" width="22" height="22"> <a href="javascript:close_window();">Back to list of hotels</a>
+    {% else %}
+    {% set aux_id = hotel_revs[0].hotelID|string %}
+    {% set aux_id=aux_id[-1] %}
+    <div style="width: 1350px;">
+       <div style="float:left; width: 20%">
+           <br>
+        <table>
+                <td valign="top"><img src="{{ url_for('static', filename='img/hotels/room') }}{{ aux_id }}.jpg" width="300" height="150">
+                <br><br><img src="{{ url_for('static', filename='img/hotels/location') }}{{ aux_id }}.png" width="300" height="120">
+            </td>
+            </tr>
+        </table>
+        </div>
+        <div style="float:right">
+            <div class="container3">
+                <div class="hotelbox">
+                <div class="top-bar">
+                <div class="avatar"><p>B</p></div>
+                <div class="name">Hotel {{ hotel_revs[0].name }}</div>
+                <div class="price">${{ hotel_revs[0].price }}</div>
+                <div class="stars"><img src="{{ url_for('static', filename='img/rating/') }}{{ hotel_revs[0].stars_file}}" width="95" height="20"></div>
+                <div class="middle">
+                    <div class="voldemort">
+                    <div class="description">About this hotel:<br>It is located in the vicinity of Main Square, and provides free Wi-Fi access, AC and tea/coffee facilities
+                    </div>
+                    </div>
+                </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+            <br><a style="color: #FFFFFF;">Customer reviews:</a></b>
+                {% for review in hotel_revs%}
+                    <a style="color: #777777;"><i>{{review.author}} wrote: </i></a>
+                    <textarea cols="50" rows="15" readonly style="font-size: 10pt; color: #20968F; outline-color: #719ECE;border: 1px solid #F9FBFF;width: 1000px;height: 80px;">{{review.review_text}}</textarea><br><br>
+                 {% endfor %}
+
+    {% endif %}
+
+  <!--   <form action="/" method = "POST">-->
+<!--        <input type="text" name="content" id="content">-->
+<!--        <input type="submit" value="Add task">-->
+   <!--  </form>-->
+
+{% endblock %}

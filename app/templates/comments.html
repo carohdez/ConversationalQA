@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Coments on feature</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    {% if comments|length < 1 %}
+    No comments for this hotel-feature.
+
+    <br><br><img src="/img/back.png" width="22" height="22"> <a href="../?back=1">Back to list of hotels</a>
+
+    {% else %}
+<!--    <br> Activated: {{ activated }}-->
+    <br><br><img src="/img/back.png" width="22" height="22"> <a href="../aspects/{{comments[0].hotelID}}&1">Back to hotel overview</a>
+<!--    <br><br>The opinions about <b>{{comments[0].aspect}}</b>:-->
+    <br><br>The opinions about <b>{{aspect}}</b>:
+    <br>(extracted from reviews written by users)
+    <table  class="center">
+        <tr>
+    {% for feature in most_comm_features %}
+        {% if feature == activated  %}
+            <th>
+            <div class="container">
+                <img src="/img/green_button.PNG" width="110" height="30">
+<!--                <input type="image" value="specific" src="/img/green_button.PNG" width="110" height="30" >-->
+                <div class="centered">{{ feature }}</div>
+            </div>
+            </th>
+        {% else %}
+            <th>
+            <div class="container">
+<!--                <input type="image" src="/img/gray_button.PNG" width="110" height="30" name="specific" value="{{ feature }}">-->
+                <img src="/img/gray_button.PNG" width="110" height="30" >
+
+                <div class="centered"><a href="../comments/?hotelID={{comments[0].hotelID}}&aspect={{aspect}}&specific={{ feature }}">{{ feature }}</a></div>
+<!--                 <div class="centered">{{ feature }}</div>-->
+            </div>
+            </th>
+        {% endif %}
+    {% endfor%}
+    </tr>
+    </table>
+    <br><br>
+    <font size="2" face="sans-serif" >
+    <table>
+        <tr>
+        <th><img src="/img/green.PNG" width="12" height="20"> Positive comments</th>
+        <th><img src="/img/red.PNG" width="12" height="20"> Negative comments</th>
+        </tr>
+        <tr>
+        <td valign="top">
+            {% for comment in comments %}
+                {% if comment.polarity == 'positive'%}
+                    <br><br> {{ comment.sentence}}
+<!--            ({{ comment.feature}}) ({{ comment.polarity}})-->
+                    <br><a href="../review/{{comment.reviewID}}&aspect={{aspect}}&specific={{ activated }}">Read full review</a>
+                {% endif %}
+            {% endfor %}
+        </td>
+        <td valign="top">
+            {% for comment in comments %}
+                {% if comment.polarity == 'negative'%}
+                    <br><br> {{ comment.sentence}}
+<!--                ({{ comment.feature}}) ({{ comment.polarity}})-->
+                    <br><a href="../review/{{comment.reviewID}}&aspect={{aspect}}&specific={{ activated }}">Read full review</a>
+                {% endif %}
+            {% endfor %}
+        </td>
+        </tr>
+
+    </table>
+
+    {% endif %}
+    <form action="/" method = "POST">
+<!--        <input type="text" name="content" id="content">-->
+<!--        <input type="submit" value="Add task">-->
+    </form>
+
+<div>
+{% endblock %}

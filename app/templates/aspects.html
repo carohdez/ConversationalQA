@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<style>
+{% if ((condition == '1') or (condition == '2')) %}
+    th, td {
+      text-align: center;
+      padding: 4px;
+    }
+    th {
+      background-color: #C3E5DF;
+      color: black;
+    }
+
+    tr:nth-child(even) {background-color: #f2f2f2;}
+{% endif %}
+</style>
+
+<title>Features detail</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    {% if pref|length < 1 %}
+    No preferences for this user.
+    <img src="/img/back.png" width="22" height="22"> <a href="../?back=1">Back to list of hotels</a>
+    {% else %}
+    <h1>Hotel {{ aspects_hotel[0].name }}</h1>
+    <img src="/img/rating/{{ aspects_hotel[0].stars_file}}" width="100" height="20"> {{ aspects_hotel[0].num_reviews }} reviews
+    <br>
+    <br>
+<!--    <table>-->
+<!--        {% for preference in pref %}-->
+<!--        <td>{{ preference}}</td>-->
+<!--        {% endfor %}-->
+<!--    </table>-->
+    {% endif %}
+
+<!--    {% if non_pref|length < 1 %}-->
+<!--    No non-preferences for this user.-->
+<!--    {% else %}-->
+<!--    <table>-->
+<!--        {% for preference in non_pref %}-->
+<!--        <td>{{ preference}}</td>-->
+<!--        {% endfor %}-->
+<!--    </table>-->
+<!--    {% endif %}-->
+<!--    <img src="/img/back.jfif" width="20" height="19"> <a href="../">Back to list of hotels</a>-->
+    <img src="/img/back.png" width="22" height="22"> <a href="../?back=1">Back to list of hotels</a>
+<!--    <br> Condition: {{ condition }}-->
+    <br>
+    <br>
+    {% if ((condition == '1') or (condition == '2')) %} <!-- Condition table...............................................................-->
+        {% if aspects_hotel|length < 1 %}
+        No aspects were evaluated for this hotel.
+        {% else %}
+            <table>
+                <tr>
+                    <th>Feature</th>
+                    <th># Comments</th>
+                    <th>Positive</th>
+                    <th>Negative</th>
+                    <th></th>
+                </tr>
+            {% for preference in pref %}
+                {% for aspect in aspects_hotel %}
+                    {% if preference == aspect.aspect %}
+                        {% set total_comments = aspect.comments_positive + aspect.comments_negative %}
+                        {% if total_comments == 0 %}
+                            {% set total_comments = 1 %}
+                        {% endif %}
+                        <tr>
+                            {% if aspect.aspect == 'food' %}
+                                <td>food & beverages</td>
+                            {% else %}
+                                <td>{{ aspect.aspect}}</td>
+                            {% endif %}
+                            {% if aspect.comments_positive + aspect.comments_negative == 0 %}
+                            <td>{{ 0 }}</td>
+                            {% else %}
+                            <td>{{ total_comments}}</td>
+                            {% endif %}
+                            <td>{{ (aspect.comments_positive/total_comments * 100)|round|int}}%</td>
+                            <td>{{ (aspect.comments_negative/total_comments * 100)|round|int}}%</td>
+                            {% if (aspect.comments_positive + aspect.comments_negative != 0) and ((condition == '1') or (condition == '3')) %}
+                            <td><a href="../comments/?hotelID={{aspect.hotelID}}&aspect={{aspect.aspect}}">What was reported?</a></td>
+                            {% endif %}
+                        </tr>
+                    {% endif%}
+                {% endfor%}
+            {% endfor%}
+            </table>
+        {% endif %}
+    {% endif %}
+    {% if ((condition == '3') or (condition == '4')) %} <!-- Condition bars...............................................................-->
+        {% if aspects_hotel|length < 1 %}
+        No aspects were evaluated for this hotel.
+        {% else %}
+            <table>
+                <tr>
+                    <th></th>
+                    <th># Comments
+                        <br>{{ x_ticks[0] }}<img src="/img/white.PNG" width="35" height="10" >{{ x_ticks[1] }}<img src="/img/white.PNG" width="35" height="10" >{{ x_ticks[2] }}<img src="/img/white.PNG" width="35" height="10" >{{ x_ticks[3] }}<img src="/img/white.PNG" width="35" height="10" >{{ x_ticks[4] }}
+                        <br><img src="/img/scale.PNG" width="200" height="8" >
+                    </th>
+                    <th></th>
+<!--                    <th>Max comments: {{ max_comments }}</th>-->
+                </tr>
+            <!-- Get the maximum number of comments -->
+
+            {% for preference in pref %}
+                {% for aspect in aspects_hotel %}
+                    {% if preference == aspect.aspect %}
+                        {% set total_comments = aspect.comments_positive + aspect.comments_negative %}
+                        {% if total_comments == 0 %}
+                            {% set total_comments = 1 %}
+                        {% endif %}
+                        <tr>
+                            {% if aspect.aspect == 'food' %}
+                                <td>Food and beverages</td>
+                            {% else %}
+                                <td>{{ aspect.aspect}}</td>
+                            {% endif %}
+                            <td>
+<!--                                <br><img src="/img/green.PNG" alt="{{ aspect.comments_positive }} comments" width="{{ (aspect.comments_positive/total_comments * 100)|round|int }}" height="20" >--> <!-- To show all bars with equal length-->
+<!--                                <img src="/img/red.PNG" alt="{{ aspect.comments_negative }} comments" width="{{ (aspect.comments_negative/total_comments * 100)|round|int }}" height="20">--><!-- To show all bars with equal length-->
+                                <img src="/img/green.PNG" alt="{{ aspect.comments_positive }} comments" width="{{ ((aspect.comments_positive/max_comments * 100)|round|int) * 2}}" height="20" >
+                                <img src="/img/red.PNG" alt="{{ aspect.comments_negative }} comments" width="{{ ((aspect.comments_negative/max_comments * 100)|round|int) * 2 }}" height="20">
+                            </td>
+                            {% if (aspect.comments_positive + aspect.comments_negative != 0) and ((condition == '1') or (condition == '3')) %}
+                            <td><a href="../comments/?hotelID={{aspect.hotelID}}&aspect={{aspect.aspect}}">What was reported?</a></td>
+                            {% endif %}
+<!--                            <td>{{ total_comments}}, positive: {{ (aspect.comments_positive/total_comments * 100)|round|int}}, negative: {{ (aspect.comments_negative/total_comments * 100)|round|int}}</td>-->
+
+                        </tr>
+                    {% endif%}
+                {% endfor%}
+            {% endfor%}
+            </table>
+            <br>
+            <table>
+            <tr>
+                <td></td>
+                <td>
+                    <img src="/img/green.PNG" width="12" height="20"> Positive comments
+                    <img src="/img/red.PNG" width="12" height="20"> Negative comments
+                </td>
+                <td></td>
+                <td></td>
+             </tr>
+            </table>
+        {% endif %}
+    {% endif %}
+    {% if ((condition == '5') or (condition == '6')) %} <!-- Condition text...............................................................-->
+        {% if aspects_hotel|length < 1 %}
+        No aspects were evaluated for this hotel.
+        {% else %}
+            {% if aspects_hotel[0].score > 4 %}
+                {% set adj_hotel = 'very good' %}
+            {% else %}
+                {% set adj_hotel = 'good' %}
+            {% endif %}
+            {% set text= "This hotel seems to be a " + adj_hotel + " option for you, given that: "%}
+            <br> {{text}}
+            {% set first_pref = pref[0] %}
+            {% set last_pref = pref[-1] %}
+            {% for preference in pref %}
+                {% for aspect in aspects_hotel %}
+                    {% if preference == aspect.aspect %}
+                        {% set total_comments = aspect.comments_positive + aspect.comments_negative %}
+                        {% if total_comments == 0 %}
+                            {% set total_comments = 1 %}
+                        {% endif %}
+                        {% set per_positive = (aspect.comments_positive/total_comments * 100)|round|int %}
+                        {% set per_negative = (aspect.comments_negative/total_comments * 100)|round|int %}
+                        {% if first_pref == aspect.aspect %}
+                            {% set text = per_positive|string + "% of the visitors reported positive comments about " %}
+                        {% else %}
+                            {% if last_pref == aspect.aspect %}
+                                {% set text = ", and " + per_positive|string + "% about " %}
+                            {% else %}
+                                {% set text = ", " + per_positive|string + "% about " %}
+                            {% endif %}
+                        {% endif%}
+                        {% if condition == '5' %}
+                            {{text}}<a href="../comments/?hotelID={{aspect.hotelID}}&aspect={{aspect.aspect}}">{{aspect.aspect}}</a>
+                        {% else %}
+                            {{text}}<b>{{aspect.aspect}}</b>
+                        {% endif %}
+                    {% endif%}
+                {% endfor%}
+            {% endfor%}
+            {% set text= "Some visitors mentioned negative comments about " + most_negative_aspect + " (" + per_most_negative_aspect+ "%), however such claims are seemingly related to particular incidents  rather than a usual situation, or perhaps to very high expectations that were not met. "%}
+            <br> {{text}}
+            </table>
+        {% endif %}
+    {% endif %}
+
+    {% if(condition == '1') or (condition == '3') or (condition == '5') %}
+        {% if moref=='no'%}
+            <br><a href="?moref=yes">More features</a>
+        {% else%}
+            <br><a href="?moref=no">Less features</a>
+        {% endif %}
+    {% endif%}
+
+    <form action="/" method = "POST">
+<!--        <input type="text" name="content" id="content">-->
+<!--        <input type="submit" value="Add task">-->
+    </form>
+
+<div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Review</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    {% if review|length < 1 %}
+    We cannot find this review.
+    <img src="/img/back.PNG" width="22" height="22"> <a href="../?back=1}">Back to list of hotels</a>
+    {% else %}
+    <br><br><img src="/img/back.png" width="22" height="22"> <a href="../comments/?hotelID={{review[0].hotelID}}&{{aspect}}&back=1">Back to comments</a>
+    <font size="2" face="sans-serif" >
+    <br><br><b> {{ review[0].author }} </b> wrote:
+    <br>
+
+    <br> {{ review[0].review_text }}
+    {% endif %}
+    <form action="/" method = "POST">
+<!--        <input type="text" name="content" id="content">-->
+<!--        <input type="submit" value="Add task">-->
+    </form>
+
+<div>
+{% endblock %}
